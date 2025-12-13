@@ -42,8 +42,8 @@ const Header = () => {
             {/* Logo Area */}
             <div className="relative flex w-full justify-center lg:w-auto lg:justify-start">
               <Link to="/" className="flex items-center gap-2 md:gap-3 group">
-                <img src={LogoIcon} alt="Logo Ícone" className={cn("w-auto object-contain transition-transform group-hover:scale-105", isScrolled ? "h-8 md:h-11" : "h-8 md:h-12")} />
-                <img src={LogoName} alt="Dr. Marcelo Melo" className={cn("w-auto object-contain mt-0.5 md:mt-1", isScrolled ? "h-6 md:h-9" : "h-6 md:h-10")} />
+                <img src={LogoIcon} alt="Logo Ícone" className={cn("w-auto object-contain transition-transform group-hover:scale-105", isScrolled ? "h-9 md:h-11" : "h-9 md:h-12")} />
+                <img src={LogoName} alt="Dr. Marcelo Melo" className={cn("w-auto object-contain mt-0.5 md:mt-1", isScrolled ? "h-7 md:h-9" : "h-7 md:h-10")} />
               </Link>
 
               <button
