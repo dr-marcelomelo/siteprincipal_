@@ -195,6 +195,7 @@
                 options: [
                     { value: 'sim_atual', label: 'Sim, contribuo atualmente' },
                     { value: 'sim_passado', label: 'Já contribuí no passado' },
+                    { value: 'segurado_especial', label: 'Sou segurado especial (Agricultor/Pescador)' },
                     { value: 'nunca', label: 'Nunca contribuí' },
                     { value: 'nao_sei', label: 'Não sei informar' }
                 ]
@@ -427,6 +428,12 @@
                 return;
             }
 
+            // Step 2: Disqualify if never contributed to INSS
+            if (currentStep === 2 && formData.inssContribution === 'nunca') {
+                showDisqualification('Para ter direito ao auxílio-maternidade, é necessário ter contribuído para o INSS em algum momento. Entre em contato se tiver dúvidas sobre sua situação previdenciária.');
+                return;
+            }
+
             // Step 4: Disqualify if birth date is more than 5 years ago
             if (currentStep === 4 && formData.birthDate) {
                 const birthDate = new Date(formData.birthDate);
@@ -522,6 +529,7 @@
                 inssContribution: {
                     'sim_atual': 'Sim, contribuo atualmente',
                     'sim_passado': 'Já contribuí no passado',
+                    'segurado_especial': 'Sou segurado especial (Agricultor/Pescador)',
                     'nunca': 'Nunca contribuí',
                     'nao_sei': 'Não sei informar'
                 },
