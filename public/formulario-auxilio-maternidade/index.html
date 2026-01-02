@@ -5,6 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário Auxílio Maternidade</title>
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1385665022550986');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=1385665022550986&ev=PageView&noscript=1" /></noscript>
+    <!-- End Meta Pixel Code -->
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -124,10 +145,10 @@
                 Obrigado pelo seu interesse
             </h3>
             <p id="disqualificationText" class="text-gray-300 text-lg leading-relaxed mb-8"></p>
-            <button onclick="restartForm()"
-                class="inline-flex items-center justify-center px-8 py-3 text-lg font-medium transition-all duration-300 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white border-2 border-neutral-700 hover:border-neutral-600">
-                Reiniciar Formulário
-            </button>
+            <a href="https://www.drmarcelomeloadv.com.br/"
+                class="inline-flex items-center justify-center px-8 py-3 text-lg font-medium transition-all duration-300 rounded-full bg-gold-medium hover:bg-gold-dark text-white shadow-lg hover:shadow-xl">
+                Voltar para o início
+            </a>
         </div>
     </div>
 
@@ -143,8 +164,7 @@
             wantsContact: '',
             name: '',
             whatsapp: '',
-            city: '',
-            state: ''
+            email: ''
         };
 
         const steps = {
@@ -294,17 +314,12 @@
                             <input type="tel" id="whatsappInput" placeholder="WhatsApp (com DDD)" value="${formData.whatsapp}"
                                 class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-neutral-800 bg-neutral-deepBlack text-white placeholder-gray-500 focus:border-gold-medium focus:outline-none transition-all">
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="relative">
-                                <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-gold-medium" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                <input type="text" id="cityInput" placeholder="Cidade" value="${formData.city}"
-                                    class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-neutral-800 bg-neutral-deepBlack text-white placeholder-gray-500 focus:border-gold-medium focus:outline-none transition-all">
-                            </div>
-                            <input type="text" id="stateInput" placeholder="Estado (UF)" value="${formData.state}" maxlength="2"
-                                class="w-full px-4 py-4 rounded-xl border-2 border-neutral-800 bg-neutral-deepBlack text-white placeholder-gray-500 focus:border-gold-medium focus:outline-none transition-all uppercase">
+                        <div class="relative">
+                            <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-gold-medium" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <input type="email" id="emailInput" placeholder="E-mail (opcional)" value="${formData.email}"
+                                class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-neutral-800 bg-neutral-deepBlack text-white placeholder-gray-500 focus:border-gold-medium focus:outline-none transition-all">
                         </div>
                     </div>
                 `;
@@ -374,9 +389,7 @@
             } else if (step.type === "form") {
                 const name = document.getElementById('nameInput')?.value || '';
                 const whatsapp = document.getElementById('whatsappInput')?.value || '';
-                const city = document.getElementById('cityInput')?.value || '';
-                const state = document.getElementById('stateInput')?.value || '';
-                return name !== '' && whatsapp !== '' && city !== '' && state !== '';
+                return name !== '' && whatsapp !== '';
             } else {
                 return formData[step.field] !== '';
             }
@@ -387,13 +400,30 @@
             if (currentStep === 7) {
                 formData.name = document.getElementById('nameInput').value;
                 formData.whatsapp = document.getElementById('whatsappInput').value;
-                formData.city = document.getElementById('cityInput').value;
-                formData.state = document.getElementById('stateInput').value.toUpperCase();
+                formData.email = document.getElementById('emailInput')?.value || '';
             }
 
             // Step 1: Disqualify if "Não"
             if (currentStep === 1 && formData.hasChild === 'nao') {
                 showDisqualification('No momento, o auxílio-maternidade é destinado apenas para quem está grávida ou já teve filho(a).');
+                return;
+            }
+
+            // Step 4: Disqualify if birth date is more than 5 years ago
+            if (currentStep === 4 && formData.birthDate) {
+                const birthDate = new Date(formData.birthDate);
+                const today = new Date();
+                const fiveYearsAgo = new Date(today.getFullYear() - 5, today.getMonth(), today.getDate());
+
+                if (birthDate < fiveYearsAgo) {
+                    showDisqualification('Infelizmente, o prazo legal para solicitar o auxílio-maternidade é de até 5 anos após o parto. Seu caso ultrapassou esse período.');
+                    return;
+                }
+            }
+
+            // Step 5: Disqualify if benefit was already approved
+            if (currentStep === 5 && formData.previousAttempt === 'aprovado') {
+                showDisqualification('Que ótimo que você já conseguiu seu auxílio-maternidade! Se precisar de ajuda com outros assuntos jurídicos, estaremos à disposição.');
                 return;
             }
 
@@ -423,6 +453,18 @@
         }
 
         function showDisqualification(message) {
+            // Send disqualified lead data to webhook
+            sendToWebhook('disqualified', message);
+
+            // Fire Meta Pixel event for disqualified lead
+            if (typeof fbq !== 'undefined') {
+                fbq('trackCustom', 'lead_desqualificado', {
+                    reason: message,
+                    step: currentStep,
+                    formData: formData
+                });
+            }
+
             document.getElementById('formContainer').classList.add('hidden');
             document.getElementById('disqualificationMessage').classList.remove('hidden');
             document.getElementById('disqualificationText').textContent = message;
@@ -482,12 +524,7 @@
 
 📋 *Dados do Lead:*
 Nome: ${formData.name}
-WhatsApp: ${formData.whatsapp}
-Cidade/Estado: ${formData.city}/${formData.state}
-
-🎯 *Qualificação:*
-Qualidade: ${leadQuality}
-Urgência: ${urgency}
+WhatsApp: ${formData.whatsapp}${formData.email ? `\nE-mail: ${formData.email}` : ''}
 
 📝 *Informações:*
 Situação: ${labels.hasChild[formData.hasChild]}
@@ -497,7 +534,86 @@ Data do parto: ${new Date(formData.birthDate).toLocaleDateString('pt-BR')}
 Tentativa anterior: ${labels.previousAttempt[formData.previousAttempt]}`;
 
             const encodedMessage = encodeURIComponent(message);
+
+            // Send qualified lead data to webhook
+            sendToWebhook('qualified', null);
+
+            // Fire Meta Pixel event for qualified lead with all data
+            if (typeof fbq !== 'undefined') {
+                fbq('trackCustom', 'lead_qualificado', {
+                    content_name: 'Auxílio Maternidade',
+                    lead_quality: leadQuality,
+                    urgency: urgency,
+                    name: formData.name,
+                    phone: formData.whatsapp,
+                    email: formData.email || '',
+                    has_child: formData.hasChild,
+                    inss_contribution: formData.inssContribution,
+                    work_situation: formData.workSituation,
+                    birth_date: formData.birthDate,
+                    previous_attempt: formData.previousAttempt
+                });
+            }
+
             window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedMessage}`, '_blank');
+        }
+
+        // Webhook function to send data to n8n
+        function sendToWebhook(status, disqualificationReason) {
+            const webhookUrl = 'https://dev-manager-01-n8n.ekupxt.easypanel.host/webhook/auxiliomaternidade';
+
+            // Calculate lead quality and urgency if qualified
+            let leadQuality = 'Não qualificado';
+            let urgency = 'N/A';
+
+            if (status === 'qualified') {
+                if (formData.previousAttempt === 'negado') {
+                    leadQuality = 'Premium';
+                } else if (formData.workSituation === 'clt') {
+                    leadQuality = 'Alto';
+                } else {
+                    leadQuality = 'Médio';
+                }
+
+                if (formData.birthDate) {
+                    const birthDate = new Date(formData.birthDate);
+                    const today = new Date();
+                    const diffTime = Math.abs(today.getTime() - birthDate.getTime());
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    urgency = diffDays <= 120 ? 'Alta' : 'Média';
+                }
+            }
+
+            const payload = {
+                status: status,
+                timestamp: new Date().toISOString(),
+                leadQuality: leadQuality,
+                urgency: urgency,
+                disqualificationReason: disqualificationReason || null,
+                disqualificationStep: status === 'disqualified' ? currentStep : null,
+                formData: {
+                    hasChild: formData.hasChild,
+                    inssContribution: formData.inssContribution,
+                    workSituation: formData.workSituation,
+                    birthDate: formData.birthDate,
+                    previousAttempt: formData.previousAttempt,
+                    wantsContact: formData.wantsContact,
+                    name: formData.name || '',
+                    whatsapp: formData.whatsapp || '',
+                    email: formData.email || ''
+                }
+            };
+
+            // Send to webhook
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            }).catch(error => {
+                console.error('Error sending to webhook:', error);
+            });
         }
 
         // Calendar functionality
