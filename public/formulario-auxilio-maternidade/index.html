@@ -165,6 +165,19 @@
     <script>
         const PHONE_NUMBER = "5592984688656";
         let currentStep = 1;
+
+        // Extract UTM parameters from URL
+        function getUTMParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                utm_source: urlParams.get('utm_source') || '',
+                utm_medium: urlParams.get('utm_medium') || '',
+                utm_campaign: urlParams.get('utm_campaign') || '',
+                utm_term: urlParams.get('utm_term') || '',
+                utm_content: urlParams.get('utm_content') || ''
+            };
+        }
+
         const formData = {
             hasChild: '',
             inssContribution: '',
@@ -174,7 +187,8 @@
             wantsContact: '',
             name: '',
             whatsapp: '',
-            email: ''
+            email: '',
+            utm: getUTMParameters()
         };
 
         const steps = {
@@ -529,7 +543,7 @@
                 inssContribution: {
                     'sim_atual': 'Sim, contribuo atualmente',
                     'sim_passado': 'Já contribuí no passado',
-                    'segurado_especial': 'Sou segurado especial (Agricultor/Pescador)',
+                    'segurado_especial': 'Segurado especial (Agricultor/Pescador)',
                     'nunca': 'Nunca contribuí',
                     'nao_sei': 'Não sei informar'
                 },
@@ -547,6 +561,18 @@
                 }
             };
 
+            // Build UTM section if any UTM parameters exist
+            const hasUTM = Object.values(formData.utm).some(value => value !== '');
+            let utmSection = '';
+            if (hasUTM) {
+                utmSection = '\n\n🔗 *Origem do Lead:*';
+                if (formData.utm.utm_source) utmSection += `\nFonte: ${formData.utm.utm_source}`;
+                if (formData.utm.utm_medium) utmSection += `\nMídia: ${formData.utm.utm_medium}`;
+                if (formData.utm.utm_campaign) utmSection += `\nCampanha: ${formData.utm.utm_campaign}`;
+                if (formData.utm.utm_term) utmSection += `\nTermo: ${formData.utm.utm_term}`;
+                if (formData.utm.utm_content) utmSection += `\nConteúdo: ${formData.utm.utm_content}`;
+            }
+
             const message = `*LEAD - AUXÍLIO MATERNIDADE*
 
 📋 *Dados do Lead:*
@@ -558,7 +584,7 @@ Situação: ${labels.hasChild[formData.hasChild]}
 Contribuição INSS: ${labels.inssContribution[formData.inssContribution]}
 Trabalho: ${labels.workSituation[formData.workSituation]}
 Data do parto: ${new Date(formData.birthDate).toLocaleDateString('pt-BR')}
-Tentativa anterior: ${labels.previousAttempt[formData.previousAttempt]}`;
+Tentativa anterior: ${labels.previousAttempt[formData.previousAttempt]}${utmSection}`;
 
             const encodedMessage = encodeURIComponent(message);
 
@@ -627,7 +653,8 @@ Tentativa anterior: ${labels.previousAttempt[formData.previousAttempt]}`;
                     wantsContact: formData.wantsContact,
                     name: formData.name || '',
                     whatsapp: formData.whatsapp || '',
-                    email: formData.email || ''
+                    email: formData.email || '',
+                    utm: formData.utm
                 }
             };
 
