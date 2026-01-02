@@ -26,6 +26,16 @@
             src="https://www.facebook.com/tr?id=1385665022550986&ev=PageView&noscript=1" /></noscript>
     <!-- End Meta Pixel Code -->
 
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function (c, l, a, r, i, t, y) {
+            c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+            t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "uvb6s55slf");
+    </script>
+    <!-- End Microsoft Clarity -->
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -448,6 +458,7 @@
             }
 
             currentStep++;
+            markFormStarted(); // Track form start
             updateProgress();
             renderStep();
         }
@@ -703,6 +714,44 @@ Tentativa anterior: ${labels.previousAttempt[formData.previousAttempt]}`;
                 !calendar.contains(event.target) &&
                 !button.contains(event.target)) {
                 toggleCalendar();
+            }
+        });
+
+        // Form abandonment tracking
+        let formStarted = false;
+        let formCompleted = false;
+
+        // Mark form as started when user interacts
+        function markFormStarted() {
+            if (!formStarted && currentStep > 1) {
+                formStarted = true;
+            }
+        }
+
+        // Track when user leaves page without completing
+        window.addEventListener('beforeunload', function (e) {
+            if (formStarted && !formCompleted) {
+                // Fire Meta Pixel event
+                if (typeof fbq !== 'undefined') {
+                    fbq('trackCustom', 'n_enviou_form', {
+                        last_step: currentStep,
+                        formData: formData
+                    });
+                }
+
+                // Send to webhook
+                const webhookUrl = 'https://dev-manager-01-n8n.ekupxt.easypanel.host/webhook/auxiliomaternidade';
+                const payload = {
+                    status: 'abandoned',
+                    timestamp: new Date().toISOString(),
+                    lastStep: currentStep,
+                    formData: formData
+                };
+
+                // Use sendBeacon for reliable tracking on page unload
+                if (navigator.sendBeacon) {
+                    navigator.sendBeacon(webhookUrl, JSON.stringify(payload));
+                }
             }
         });
 
