@@ -1,4 +1,4 @@
-const PHONE_NUMBER = "5592984688656";
+const PHONE_NUMBER = "5592984812939";
 let currentStep = 1;
 
 // Extract UTM parameters from URL
@@ -627,3 +627,4 @@ window.addEventListener('beforeunload', function (e) {
 
 // Initialize
 renderStep();
+
