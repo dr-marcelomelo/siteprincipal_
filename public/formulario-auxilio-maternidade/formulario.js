@@ -428,10 +428,34 @@ Tentativa anterior: ${labels.previousAttempt[formData.previousAttempt]}${utmSect
 
     // Fire Meta Pixel event for qualified lead with all data
     if (typeof fbq !== 'undefined') {
+        // Preparar dados avançados para correspondência (Advanced Matching)
+        const firstName = formData.name.split(' ')[0].toLowerCase().trim();
+        const lastName = formData.name.split(' ').slice(1).join(' ').toLowerCase().trim();
+        const phone = "55" + formData.whatsapp.replace(/\D/g, ''); // Adiciona DDI 55 e remove não-números
+        const email = formData.email ? formData.email.toLowerCase().trim() : undefined;
+
+        // Gerar ou recuperar ID externo único para desduplicação
+        let externalId = localStorage.getItem('lead_external_id');
+        if (!externalId) {
+            externalId = 'lead_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('lead_external_id', externalId);
+        }
+
+        const userData = {
+            fn: firstName,
+            ln: lastName,
+            ph: phone,
+            em: email,
+            external_id: externalId,
+            country: 'br'
+        };
+
+        // 1. Disparar evento CUSTOMIZADO (mantendo histórico antigo)
         fbq('trackCustom', 'lead_qualificado', {
             content_name: 'Auxílio Maternidade',
             lead_quality: leadQuality,
             urgency: urgency,
+            // Dados originais legíveis
             name: formData.name,
             phone: formData.whatsapp,
             email: formData.email || '',
@@ -439,8 +463,20 @@ Tentativa anterior: ${labels.previousAttempt[formData.previousAttempt]}${utmSect
             inss_contribution: formData.inssContribution,
             work_situation: formData.workSituation,
             birth_date: formData.birthDate,
-            previous_attempt: formData.previousAttempt
+            previous_attempt: formData.previousAttempt,
+            // Dados de matching também no custom
+            external_id: externalId
         });
+
+        // 2. Disparar evento PADRÃO 'Lead' (Melhor otimização do algoritmo)
+        // Usamos os dados de usuário formatados para maximizar o Match Quality
+        fbq('track', 'Lead', {
+            content_name: 'Auxílio Maternidade',
+            value: leadQuality === 'Premium' ? 10 : 1, // Valor estimado para o algoritmo priorizar leads melhores
+            currency: 'BRL',
+            lead_quality: leadQuality,
+            external_id: externalId
+        }, userData); // Passa userData como parâmetro explícito para matching
     }
 
     window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedMessage}`, '_blank');
@@ -479,6 +515,7 @@ function sendToWebhook(status, disqualificationReason) {
         urgency: urgency,
         disqualificationReason: disqualificationReason || null,
         disqualificationStep: status === 'disqualified' ? currentStep : null,
+        externalId: localStorage.getItem('lead_external_id'), // Envia ID único para o n8n (útil para API de Conversões)
         formData: {
             hasChild: formData.hasChild,
             inssContribution: formData.inssContribution,
@@ -627,4 +664,3 @@ window.addEventListener('beforeunload', function (e) {
 
 // Initialize
 renderStep();
-
