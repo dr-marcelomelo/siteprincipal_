@@ -435,7 +435,7 @@ function submitForm() {
     const hasUTM = Object.values(formData.utm).some(value => value !== '');
     let utmSection = '';
     if (hasUTM) {
-        utmSection = '\n\n🔗 *Origem do Lead:*';
+        utmSection = '\n\n🔗 *Origem do Contato:*';
         if (formData.utm.utm_source) utmSection += `\nFonte: ${formData.utm.utm_source}`;
         if (formData.utm.utm_medium) utmSection += `\nMídia: ${formData.utm.utm_medium}`;
         if (formData.utm.utm_campaign) utmSection += `\nCampanha: ${formData.utm.utm_campaign}`;
@@ -452,11 +452,9 @@ function submitForm() {
         authorization: { 'sim': 'Sim, autorizo o contato' }
     };
 
-    const message = `*LEAD - BPC / LOAS*
-⭐ *Qualidade:* ${leadQuality}
-🏷️ *Tags:* ${tags.join(', ') || 'Nenhuma'}
+    const message = `*Contato - BPC / LOAS*
 
-📋 *Dados do Lead:*
+📋 *Dados do Contato:*
 Nome: ${formData.name}
 WhatsApp: ${formData.whatsapp}
 Cidade: ${formData.city} / ${formData.state}
