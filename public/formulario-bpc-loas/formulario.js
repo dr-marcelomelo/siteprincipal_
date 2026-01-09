@@ -163,6 +163,11 @@ function handleCityChange(e) {
 function updateProgress() {
     const percent = Math.round((currentStep / 7) * 100);
     document.getElementById('currentStep').textContent = currentStep;
+    // Forçar a atualização do total de etapas caso o HTML estivesse cacheado ou diferente
+    const stepText = document.querySelector('#currentStep').parentElement;
+    if (stepText) {
+        stepText.innerHTML = `Etapa <span id="currentStep">${currentStep}</span> de 7`;
+    }
     document.getElementById('progress').textContent = percent;
     document.getElementById('progressBar').style.width = percent + '%';
 }
