@@ -508,7 +508,7 @@ Renda Familiar: ${labels.income[formData.income]}
         // Atualizar dados do usuário para Advanced Matching
         fbq('init', '1385665022550986', userData);
 
-        fbq('trackCustom', 'bpc_qualificado', {
+        fbq('trackCustom', 'lead_qualificado', {
             content_name: 'BPC LOAS',
             lead_quality: leadQuality,
             tags: tags.join(','),
